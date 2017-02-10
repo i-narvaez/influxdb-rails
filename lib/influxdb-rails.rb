@@ -63,7 +63,7 @@ module InfluxDB
             values: {
               ts: timestamp,
             },
-            tags: ex_data,
+            tags: ex_data.merge(application: configuration.application_name),
             timestamp: timestamp,
           }
         rescue => e
@@ -88,6 +88,7 @@ module InfluxDB
             tags: {
               method: method,
               server: hostname,
+              application: configuration.application_name
             },
           }
 
@@ -98,6 +99,7 @@ module InfluxDB
             tags: {
               method: method,
               server: hostname,
+              application: configuration.application_name
             },
           }
 
@@ -108,6 +110,7 @@ module InfluxDB
             tags: {
               method: method,
               server: hostname,
+              application: configuration.application_name
             },
           }
         rescue => e
