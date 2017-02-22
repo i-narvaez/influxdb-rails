@@ -26,7 +26,7 @@ module InfluxDB
           request_data = influxdb_request_data
           tag_keys = [:controller, :action, :current_user]
           values = clean_influx_params(request_data.except(tag_keys))
-          tags = request_data.splice(:controller, :action, :current_user).merge(
+          tags = request_data.slice(:controller, :action, :current_user).merge(
             server: Socket.gethostname,
             application: InfluxDB::Rails.configuration.application_name)
           InfluxDB::Rails.client.write_point "requests", {
