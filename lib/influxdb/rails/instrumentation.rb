@@ -23,10 +23,10 @@ module InfluxDB
       def write_request_data
         unless InfluxDB::Rails.configuration.ignore_current_environment?
           # From AirTrafficController
-          request_data = influx_db_request_data
+          request_data = influxdb_request_data
           tags_keys = [:controller, :action, :current_user]
-          values = request_data.except(tag_keys)
-          tags = request_data.only(tag_keys).merge(
+          values = clean_influx_params(request_data.except(tag_keys))
+          tags = request_data.splice(:controller, :action, :current_user).merge(
             server: Socket.gethostname,
             application: InfluxDB::Rails.configuration.application_name)
           InfluxDB::Rails.client.write_point "requests", {
@@ -38,6 +38,15 @@ module InfluxDB
 
       def self.included(base)
         base.extend(ClassMethods)
+      end
+
+      private
+
+      def clean_influx_params(influx_params)
+        influx_params.each do |k, v|
+          influx_params[k] = v.to_json if v.is_a? Hash
+          influx_params[k] = v || ''
+        end
       end
 
       module ClassMethods
