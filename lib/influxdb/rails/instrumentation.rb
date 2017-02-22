@@ -14,7 +14,23 @@ module InfluxDB
             tags: {
               method: "#{controller_name}##{action_name}",
               server: Socket.gethostname,
+              application: InfluxDB::Rails.configuration.application_name
             },
+          }
+        end
+      end
+
+      def write_request_data
+        unless InfluxDB::Rails.configuration.ignore_current_environment?
+          # From AirTrafficController
+          request_data = influx_db_request_data
+          values = request_data.except(:controller, :action, :current_user)
+          tags = request_data.only(:controller, :action, :current_user).merge(
+            server: Socket.gethostname,
+            application: InfluxDB::Rails.configuration.application_name)
+          InfluxDB::Rails.client.write_point "requests", {
+            values: values,
+            tags: tags,
           }
         end
       end
@@ -24,6 +40,11 @@ module InfluxDB
       end
 
       module ClassMethods
+        def send_air_traffic(methods)
+          methods = [methods] unless methods.is_a?(Array)
+          before_filter :write_request_data, :only => methods
+        end
+
         def instrument(methods = [])
           methods = [methods] unless methods.is_a?(Array)
           around_filter :benchmark_for_instrumentation, :only => methods
