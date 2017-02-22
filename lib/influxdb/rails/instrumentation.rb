@@ -43,8 +43,9 @@ module InfluxDB
 
       def clean_influx_params(influx_params)
         influx_params.each do |k, v|
+          v.delete!("^\u{0000}-\u{007F}") if v.is_a? String
           influx_params[k] = v.to_json if v.is_a? Hash
-          influx_params[k] = v || ''
+          influx_params.delete(k) if v.nil?
         end
       end
 
