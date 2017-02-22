@@ -20,7 +20,7 @@ module InfluxDB
           :user_agent => request.env["HTTP_USER_AGENT"],
           :remote_ip => request.remote_ip,
           :referer => request.referer,
-          :current_user => (current_user rescue nil)
+          :current_user => (current_user.try(:id) rescue nil)
         }
       end
 
