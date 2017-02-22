@@ -24,7 +24,7 @@ module InfluxDB
         unless InfluxDB::Rails.configuration.ignore_current_environment?
           # From AirTrafficController
           request_data = influxdb_request_data
-          tags_keys = [:controller, :action, :current_user]
+          tag_keys = [:controller, :action, :current_user]
           values = clean_influx_params(request_data.except(tag_keys))
           tags = request_data.splice(:controller, :action, :current_user).merge(
             server: Socket.gethostname,
