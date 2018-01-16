@@ -5,7 +5,32 @@ For the full commit log, [see here](https://github.com/influxdata/influxdb-rails
 
 ## Unreleased changes
 
-- Added `retry` config option (#17, @scambra).
+- None.
+
+## v0.4.3, released 2017-12-12
+
+- Added `time_precision` config option (#42, @kkentzo)
+
+## v0.4.2, released 2017-11-28
+
+- Added `open_timeout`, `read_timeout`, and `max_delay` config options
+  (#41, @emaxi)
+- Deprecate unused method (`#reraise_global_exceptions` in
+  `InfluxDB::Rails::Configuration`, #37, @vassilevsky)
+
+## v0.4.1, released 2017-10-23
+
+- Bump `influx` version dependency (#40, @rockclimber73)
+
+## v0.4.0, released 2017-08-19
+
+- Drop support for Rails 3, Ruby < 2.2
+- Sync version with `influxdb` gem
+
+## v0.1.12, released 2017-06-06
+
+- Added Rails 5.1 compatibility (#31, @djgould).
+- Added `retry` config option (#17, @scambra and #18, @bcantin).
 
 ## v0.1.11, released 2016-11-24
 

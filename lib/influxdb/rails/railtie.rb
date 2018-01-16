@@ -27,15 +27,21 @@ module InfluxDB
 
         if defined?(::ActionDispatch::DebugExceptions)
           require 'influxdb/rails/middleware/hijack_render_exception'
-          ::ActionDispatch::DebugExceptions.send(:include, InfluxDB::Rails::Middleware::HijackRenderException)
+          exceptions_class = ::ActionDispatch::DebugExceptions
         elsif defined?(::ActionDispatch::ShowExceptions)
           require 'influxdb/rails/middleware/hijack_render_exception'
-          ::ActionDispatch::ShowExceptions.send(:include, InfluxDB::Rails::Middleware::HijackRenderException)
+          exceptions_class = ::ActionDispatch::ShowExceptions
         end
+
+        InfluxDB::Rails.safely_prepend(
+          "HijackRenderException",
+          :from => InfluxDB::Rails::Middleware,
+          :to => exceptions_class
+        )
 
         if defined?(ActiveSupport::Notifications)
           ActiveSupport::Notifications.subscribe "process_action.action_controller" do |name, start, finish, id, payload|
-            if InfluxDB::Rails.configuration.instrumentation_enabled  && ! InfluxDB::Rails.configuration.ignore_current_environment?
+            if InfluxDB::Rails.configuration.instrumentation_enabled? && ! InfluxDB::Rails.configuration.ignore_current_environment?
               begin
                 InfluxDB::Rails.handle_action_controller_metrics(name, start, finish, id, payload)
               rescue => e

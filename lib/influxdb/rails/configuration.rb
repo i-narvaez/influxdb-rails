@@ -9,6 +9,10 @@ module InfluxDB
       attr_accessor :async
       attr_accessor :use_ssl
       attr_accessor :retry
+      attr_accessor :open_timeout
+      attr_accessor :read_timeout
+      attr_accessor :max_delay
+      attr_accessor :time_precision
 
       attr_accessor :series_name_for_controller_runtimes
       attr_accessor :series_name_for_view_runtimes
@@ -38,7 +42,9 @@ module InfluxDB
 
       attr_accessor :instrumentation_enabled
       attr_accessor :debug
+
       attr_accessor :reraise_global_exceptions
+      deprecate :reraise_global_exceptions => "This method serves no purpose and will be removed in the release after 0.1.13"
 
 
       DEFAULTS = {
@@ -50,6 +56,10 @@ module InfluxDB
         :async              => true,
         :use_ssl            => false,
         :retry              => nil,
+        :open_timeout       => 5,
+        :read_timeout       => 300,
+        :max_delay          => 30,
+        :time_precision     => "s",
 
         :series_name_for_controller_runtimes  => "rails.controller",
         :series_name_for_view_runtimes        => "rails.view",
@@ -93,6 +103,10 @@ module InfluxDB
         @async              = DEFAULTS[:async]
         @use_ssl            = DEFAULTS[:use_ssl]
         @retry              = DEFAULTS[:retry]
+        @open_timeout       = DEFAULTS[:open_timeout]
+        @read_timeout       = DEFAULTS[:read_timeout]
+        @max_delay          = DEFAULTS[:max_delay]
+        @time_precision     = DEFAULTS[:time_precision]
 
         @series_name_for_controller_runtimes  = DEFAULTS[:series_name_for_controller_runtimes]
         @series_name_for_view_runtimes        = DEFAULTS[:series_name_for_view_runtimes]
@@ -118,10 +132,6 @@ module InfluxDB
 
       def instrumentation_enabled?
         !!@instrumentation_enabled
-      end
-
-      def reraise_global_exceptions?
-        !!@reraise_global_exceptions
       end
 
       def ignore_user_agent?(incoming_user_agent)

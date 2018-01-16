@@ -14,7 +14,8 @@ Maintained by [@toddboom][] and [@dmke][].
 
 ---
 
-[![Build Status](https://travis-ci.org/influxdata/influxdb-rails.png?branch=master)](https://travis-ci.org/influxdata/influxdb-rails)
+[![Gem Version](https://badge.fury.io/rb/influxdb-rails.svg)](https://badge.fury.io/rb/influxdb-rails)
+[![Build Status](https://travis-ci.org/influxdata/influxdb-rails.svg?branch=master)](https://travis-ci.org/influxdata/influxdb-rails)
 
 Automatically instrument your Ruby on Rails applications and write the
 metrics directly into [InfluxDB](http://influxdb.org/).
@@ -46,6 +47,13 @@ InfluxDB::Rails.configure do |config|
   config.influxdb_password = "root"
   config.influxdb_hosts    = ["localhost"]
   config.influxdb_port     = 8086
+
+  # config.retry = false
+  # config.async = false
+  # config.open_timeout = 5
+  # config.read_timeout = 30
+  # config.max_delay = 300
+  # config.time_precision = 'ms'
 
   # config.series_name_for_controller_runtimes = "rails.controller"
   # config.series_name_for_view_runtimes       = "rails.view"
